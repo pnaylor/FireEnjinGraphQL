@@ -1,0 +1,21 @@
+{
+  "name": "@enjin/fireenjin",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && node lib/index.js",
+    "start": "node lib/index.js",
+    "deploy": "npm run build && gcloud app deploy"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "apollo-server": "^2.9.3",
+    "firebase-admin": "^8.4.0",
+    "graphql": "^14.5.4",
+    "graphql-tag": "^2.10.1"
+  },
+  "devDependencies": {
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.2"
+  }
+}
