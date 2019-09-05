@@ -1,4 +1,4 @@
-# firebase-firestore-graphql
+# FireEnjin GraphQL
 
 An example of a [GraphQL](https://graphql.org/) setup with a Firebase Firestore backend. Uses [Apollo Engine/Server 2.0](https://www.apollographql.com/) and deployed to Google App Engine.
 
@@ -16,21 +16,21 @@ You'll also want to set up some scripts and other settings, as of writing here i
 {
   "name": "firebase-firestore-graphql",
   "scripts": {
-      "build": "tsc",
-      "serve": "npm run build && node lib/index.js",
-      "start": "node lib/index.js",
-      "deploy": "npm run build && gcloud app deploy"
+    "build": "tsc",
+    "serve": "npm run build && node lib/index.js",
+    "start": "node lib/index.js",
+    "deploy": "npm run build && gcloud app deploy"
   },
   "main": "lib/index.js",
   "dependencies": {
-      "apollo-server": "^2.0.0-beta.10",
-      "firebase-admin": "^5.12.1",
-      "graphql": "^0.13.2",
-      "graphql-tag": "^2.9.2"
+    "apollo-server": "^2.0.0-beta.10",
+    "firebase-admin": "^5.12.1",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2"
   },
   "devDependencies": {
-      "tslint": "^5.10.0",
-      "typescript": "^2.9.1"
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.1"
   }
 }
 ```
@@ -67,15 +67,15 @@ Copy the tslint and tsconfig json files from this repo into your own.
 Make a src directory and a index.ts file inside. Setup the imports
 
 ```typescript
-import * as admin from 'firebase-admin';
+import * as admin from "firebase-admin";
 
-const serviceAccount = require('../service-account.json');
+const serviceAccount = require("../service-account.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-import { ApolloServer, ApolloError, ValidationError, gql } from 'apollo-server';
+import { ApolloServer, ApolloError, ValidationError, gql } from "apollo-server";
 
 interface User {
   id: string;
@@ -138,7 +138,7 @@ const resolvers = {
     async tweets() {
       const tweets = await admin
         .firestore()
-        .collection('tweets')
+        .collection("tweets")
         .get();
       return tweets.docs.map(tweet => tweet.data()) as Tweet[];
     },
@@ -149,7 +149,7 @@ const resolvers = {
           .doc(`users/${args.id}`)
           .get();
         const user = userDoc.data() as User | undefined;
-        return user || new ValidationError('User ID not found');
+        return user || new ValidationError("User ID not found");
       } catch (error) {
         throw new ApolloError(error);
       }
