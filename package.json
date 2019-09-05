@@ -1,11 +1,12 @@
 {
   "name": "@enjin/fireenjin",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "scripts": {
     "build": "tsc",
     "serve": "npm run build && node lib/index.js",
     "start": "node lib/index.js",
-    "deploy": "npm run build && gcloud app deploy"
+    "deploy": "npm run build && gcloud app deploy",
+    "semantic-release": "semantic-release"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -16,6 +17,14 @@
   },
   "devDependencies": {
     "tslint": "^5.19.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.2",
+    "semantic-release": "^15.13.24"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/madnesslabs/FireEnjinGraphQL.git"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
