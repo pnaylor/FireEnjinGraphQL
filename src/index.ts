@@ -1,45 +1,27 @@
 import * as admin from "firebase-admin";
+import { ApolloServer, ApolloError, ValidationError, gql } from "apollo-server";
+
+import { Tweet, TweetModel } from "./models/Tweet";
+import { User, UserModel } from "./models/User";
 
 const serviceAccount = require("../service-account.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+});
+const firestore = admin.firestore();
+firestore.settings({
+  timestampsInSnapshots: true
 });
 
-import { ApolloServer, ApolloError, ValidationError, gql } from "apollo-server";
-
-interface User {
-  id: string;
-  name: string;
-  screenName: string;
-  statusesCount: number;
-}
-
-interface Tweet {
-  id: string;
-  likes: number;
-  text: string;
-  userId: string;
-}
+const userModel = new User(firestore);
+const tweetModel = new Tweet(firestore);
 
 const typeDefs = gql`
-  # A Twitter User
-  type User {
-    id: ID!
-    name: String!
-    screenName: String!
-    statusesCount: Int!
-    tweets: [Tweets]!
-  }
+  ${userModel.gql}
 
-  # A Tweet Object
-  type Tweets {
-    id: ID!
-    text: String!
-    userId: String!
-    user: User!
-    likes: Int!
-  }
+  ${tweetModel.gql}
 
   type Query {
     tweets: [Tweets]
@@ -54,16 +36,14 @@ const resolvers = {
         .firestore()
         .collection("tweets")
         .get();
-      return tweets.docs.map(tweet => tweet.data()) as Tweet[];
+      return tweets.docs.map(tweet => tweet.data()) as TweetModel[];
     },
     async user(_: null, args: { id: string }) {
       try {
-        const userDoc = await admin
-          .firestore()
-          .doc(`users/${args.id}`)
-          .get();
-        const user = userDoc.data() as User | undefined;
-        return user || new ValidationError("User ID not found");
+        return (
+          (await userModel.findById(args.id)) ||
+          new ValidationError("User ID not found")
+        );
       } catch (error) {
         throw new ApolloError(error);
       }
@@ -77,7 +57,7 @@ const resolvers = {
           .collection("tweets")
           .where("userId", "==", user.id)
           .get();
-        return userTweets.docs.map(tweet => tweet.data()) as Tweet[];
+        return userTweets.docs.map(tweet => tweet.data()) as TweetModel[];
       } catch (error) {
         throw new ApolloError(error);
       }
@@ -90,7 +70,7 @@ const resolvers = {
           .firestore()
           .doc(`users/${tweet.userId}`)
           .get();
-        return tweetAuthor.data() as User;
+        return tweetAuthor.data() as UserModel;
       } catch (error) {
         throw new ApolloError(error);
       }
