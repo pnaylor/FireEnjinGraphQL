@@ -7,11 +7,7 @@ export interface UserModel {
   statusesCount: number;
 }
 
-export class User extends Model implements UserModel {
-  id: string;
-  name: string;
-  screenName: string;
-  statusesCount: number;
+export class User extends Model {
   collectionName = "users";
   gql = `# A User Object
   type User {
