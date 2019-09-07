@@ -1,6 +1,8 @@
 import * as admin from "firebase-admin";
+import { Collection, GetRepository, Initialize } from "fireorm";
 import { ApolloServer, ApolloError, ValidationError, gql } from "apollo-server";
 
+import { JobModel } from "./models/Job";
 import { Tweet, TweetModel } from "./models/Tweet";
 import { User, UserModel } from "./models/User";
 
@@ -14,9 +16,22 @@ const firestore = admin.firestore();
 firestore.settings({
   timestampsInSnapshots: true
 });
+Initialize(firestore);
 
+@Collection()
+class Job {
+  id: string;
+  customer: string;
+  address: string;
+}
+
+const jobModel = new JobModel(firestore);
 const userModel = new User(firestore);
 const tweetModel = new Tweet(firestore);
+
+setTimeout(async () => {
+  (await GetRepository(Job).findById("popcorn245")).;
+}, 0);
 
 const typeDefs = gql`
   ${userModel.gql}

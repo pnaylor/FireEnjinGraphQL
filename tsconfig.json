@@ -6,7 +6,8 @@
     "outDir": "lib",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017"
+    "target": "es2017",
+    "experimentalDecorators": true
   },
   "compileOnSave": true,
   "include": ["src"]

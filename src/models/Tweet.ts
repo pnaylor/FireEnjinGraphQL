@@ -6,7 +6,6 @@ export interface TweetModel {
   text: string;
   userId: string;
 }
-
 export interface TweetDocumentReference
   extends FirebaseFirestore.DocumentReference {
   get(): Promise<TweetDocumentSnapshot>;
