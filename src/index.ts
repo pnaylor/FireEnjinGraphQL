@@ -42,7 +42,6 @@ const resolvers = {
     },
     async user(_: null, args: { id: string }) {
       try {
-        console.log("woo");
         return (
           (await userModel.findById(args.id)) ||
           new ValidationError("User ID not found")

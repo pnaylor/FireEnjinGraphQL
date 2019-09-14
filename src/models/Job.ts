@@ -14,7 +14,7 @@ export class JobModel extends Model {
   type Job {
     id: ID!
     customer: String!
-    address: String!
+    address: String
     user: User
   }`;
 
