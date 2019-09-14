@@ -1,16 +1,24 @@
+import { Collection } from "fireorm";
+
 import Model from "./Model";
 
+@Collection("jobs")
+export class Job {
+  id: string;
+  customer: string;
+  address: string;
+}
+
 export class JobModel extends Model {
-  collectionName = "jobs";
   gql = `# A Job Object
-  type Jobs {
+  type Job {
     id: ID!
     customer: String!
     address: String!
+    user: User
   }`;
-  repo: any;
 
-  constructor(protected firestore: FirebaseFirestore.Firestore) {
-    super(firestore);
+  constructor() {
+    super(Job);
   }
 }

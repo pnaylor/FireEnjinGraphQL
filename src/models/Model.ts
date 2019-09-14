@@ -1,11 +1,13 @@
+import { GetRepository } from "fireorm";
+
 export default class {
-  collectionName: string;
+  constructor(protected collection: any) {}
 
-  constructor(protected firestore: FirebaseFirestore.Firestore) {}
+  getRepo() {
+    return GetRepository(this.collection);
+  }
 
-  async findById(id: string): Promise<any> {
-    return (await this.firestore
-      .doc(`${this.collectionName}/${id}`)
-      .get()).data();
+  async findById(id: string) {
+    return await this.getRepo().findById(id);
   }
 }

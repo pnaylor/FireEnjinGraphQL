@@ -3,8 +3,9 @@
   "version": "0.0.0-development",
   "scripts": {
     "build": "tsc",
-    "serve": "npm run build && node lib/index.js",
-    "start": "node lib/index.js",
+    "build:watch": "tsc -w",
+    "serve": "node lib/index.js",
+    "start": "npm run watch",
     "deploy": "npm run build && gcloud app deploy",
     "semantic-release": "semantic-release"
   },
@@ -13,14 +14,15 @@
     "apollo-server": "^2.9.3",
     "firebase-admin": "^8.4.0",
     "fireorm": "^0.7.0",
+    "fs-extra": "^8.1.0",
     "graphql": "^14.5.4",
     "graphql-tag": "^2.10.1",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "semantic-release": "^15.13.24",
     "tslint": "^5.19.0",
-    "typescript": "^3.6.2",
-    "semantic-release": "^15.13.24"
+    "typescript": "^3.6.2"
   },
   "repository": {
     "type": "git",

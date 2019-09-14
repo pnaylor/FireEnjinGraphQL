@@ -1,10 +1,6 @@
 import * as admin from "firebase-admin";
-import { Collection, GetRepository, Initialize } from "fireorm";
+import { Initialize } from "fireorm";
 import { ApolloServer, ApolloError, ValidationError, gql } from "apollo-server";
-
-import { JobModel } from "./models/Job";
-import { Tweet, TweetModel } from "./models/Tweet";
-import { User, UserModel } from "./models/User";
 
 const serviceAccount = require("../service-account.json");
 
@@ -18,43 +14,35 @@ firestore.settings({
 });
 Initialize(firestore);
 
-@Collection()
-class Job {
-  id: string;
-  customer: string;
-  address: string;
-}
+import { Job, JobModel } from "./models/Job";
+import { UserModel } from "./models/User";
 
-const jobModel = new JobModel(firestore);
-const userModel = new User(firestore);
-const tweetModel = new Tweet(firestore);
-
-setTimeout(async () => {
-  (await GetRepository(Job).findById("popcorn245")).;
-}, 0);
+const jobModel = new JobModel();
+const userModel = new UserModel();
 
 const typeDefs = gql`
   ${userModel.gql}
 
-  ${tweetModel.gql}
+  ${jobModel.gql}
 
   type Query {
-    tweets: [Tweets]
+    jobs: [Job]
     user(id: String!): User
   }
 `;
 
 const resolvers = {
   Query: {
-    async tweets() {
-      const tweets = await admin
+    async jobs() {
+      const jobs = await admin
         .firestore()
-        .collection("tweets")
+        .collection("jobs")
         .get();
-      return tweets.docs.map(tweet => tweet.data()) as TweetModel[];
+      return jobs.docs.map(job => job.data()) as JobModel[];
     },
     async user(_: null, args: { id: string }) {
       try {
+        console.log("woo");
         return (
           (await userModel.findById(args.id)) ||
           new ValidationError("User ID not found")
@@ -65,27 +53,23 @@ const resolvers = {
     }
   },
   User: {
-    async tweets(user) {
+    async jobs(user) {
       try {
-        const userTweets = await admin
+        const userJobs = await admin
           .firestore()
-          .collection("tweets")
-          .where("userId", "==", user.id)
+          .collection("jobs")
+          .where("user.id", "==", user.id)
           .get();
-        return userTweets.docs.map(tweet => tweet.data()) as TweetModel[];
+        return userJobs.docs.map(job => job.data()) as Job[];
       } catch (error) {
         throw new ApolloError(error);
       }
     }
   },
-  Tweets: {
-    async user(tweet) {
+  Job: {
+    async user(job) {
       try {
-        const tweetAuthor = await admin
-          .firestore()
-          .doc(`users/${tweet.userId}`)
-          .get();
-        return tweetAuthor.data() as UserModel;
+        return await userModel.findById(job.user.id);
       } catch (error) {
         throw new ApolloError(error);
       }
