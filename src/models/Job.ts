@@ -13,7 +13,7 @@ export class JobModel extends Model {
   gql = `# A Job Object
   type Job {
     id: ID!
-    customer: String!
+    customer: String
     address: String
     user: User
   }`;

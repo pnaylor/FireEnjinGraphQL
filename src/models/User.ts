@@ -12,8 +12,8 @@ export class UserModel extends Model {
   gql = `# A User Object
   type User {
     id: ID!
-    name: String!
-    jobs: [Job]!
+    name: String
+    jobs: [Job]
   }`;
 
   constructor() {

@@ -14,7 +14,7 @@ firestore.settings({
 });
 Initialize(firestore);
 
-import { Job, JobModel } from "./models/Job";
+import { JobModel } from "./models/Job";
 import { UserModel } from "./models/User";
 
 const jobModel = new JobModel();
@@ -34,17 +34,20 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     async jobs() {
-      const jobs = await admin
-        .firestore()
-        .collection("jobs")
-        .get();
-      return jobs.docs.map(job => job.data()) as JobModel[];
+      try {
+        return (
+          (await jobModel.getRepo().find()) ||
+          new ValidationError("Jobs not found")
+        );
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
     async user(_: null, args: { id: string }) {
       try {
         return (
-          (await userModel.findById(args.id)) ||
-          new ValidationError("User ID not found")
+          (await userModel.find(args.id)) ||
+          new ValidationError("User with matching id not found")
         );
       } catch (error) {
         throw new ApolloError(error);
@@ -54,12 +57,10 @@ const resolvers = {
   User: {
     async jobs(user) {
       try {
-        const userJobs = await admin
-          .firestore()
-          .collection("jobs")
-          .where("user.id", "==", user.id)
-          .get();
-        return userJobs.docs.map(job => job.data()) as Job[];
+        return (
+          (await jobModel.whereEqualTo("user", user.id).find()) ||
+          new ValidationError("Jobs not found for user")
+        );
       } catch (error) {
         throw new ApolloError(error);
       }
@@ -68,7 +69,10 @@ const resolvers = {
   Job: {
     async user(job) {
       try {
-        return await userModel.findById(job.user.id);
+        return (
+          (await userModel.find(job.user.id)) ||
+          new ValidationError("User for Job not found")
+        );
       } catch (error) {
         throw new ApolloError(error);
       }
