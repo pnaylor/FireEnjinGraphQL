@@ -45,6 +45,7 @@ const resolvers = {
     },
     async user(_: null, args: { id: string }) {
       try {
+        console.log("wee");
         return (
           (await userModel.find(args.id)) ||
           new ValidationError("User with matching id not found")

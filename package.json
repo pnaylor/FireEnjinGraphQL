@@ -4,12 +4,12 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
-    "serve": "node lib/index.js",
-    "start": "npm run build && npm run serve",
+    "serve": "nodemon --inspect",
+    "start": "concurrently \"npm:build:watch\" \"npm:serve\"",
     "deploy": "npm run build && gcloud app deploy",
     "semantic-release": "semantic-release"
   },
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "dependencies": {
     "apollo-server": "^2.9.3",
     "firebase-admin": "^8.4.0",
@@ -20,6 +20,8 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "concurrently": "^4.1.2",
+    "nodemon": "^1.19.2",
     "semantic-release": "^15.13.24",
     "tslint": "^5.19.0",
     "typescript": "^3.6.2"
