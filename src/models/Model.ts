@@ -24,8 +24,8 @@ export default class {
     return this.getRepo().execute(queries, limitVal, orderByObj);
   }
 
-  find(id: string) {
-    return this.getRepo().findById(id);
+  async find(id: string) {
+    return { ...(await this.getRepo().findById(id)), id };
   }
 
   getRepo() {
@@ -62,5 +62,9 @@ export default class {
 
   whereArrayContains(prop, value: IFirestoreVal) {
     return this.getRepo().whereArrayContains(prop, value);
+  }
+
+  runTransaction(executor) {
+    return this.getRepo().runTransaction(executor);
   }
 }

@@ -14,8 +14,8 @@ class default_1 {
     execute(queries, limitVal, orderByObj) {
         return this.getRepo().execute(queries, limitVal, orderByObj);
     }
-    find(id) {
-        return this.getRepo().findById(id);
+    async find(id) {
+        return Object.assign(Object.assign({}, (await this.getRepo().findById(id))), { id });
     }
     getRepo() {
         return fireorm_1.GetRepository(this.collection);
@@ -43,6 +43,9 @@ class default_1 {
     }
     whereArrayContains(prop, value) {
         return this.getRepo().whereArrayContains(prop, value);
+    }
+    runTransaction(executor) {
+        return this.getRepo().runTransaction(executor);
     }
 }
 exports.default = default_1;
