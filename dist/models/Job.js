@@ -25,6 +25,11 @@ class JobModel extends Model_1.default {
     user: User
   }`;
     }
+    async find(id) {
+        return Object.assign(Object.assign({}, (await this.ref()
+            .doc(id)
+            .get()).data()), { id });
+    }
 }
 exports.JobModel = JobModel;
 //# sourceMappingURL=Job.js.map

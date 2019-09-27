@@ -4,16 +4,17 @@ import {
   IFirestoreVal,
   IOrderByParams
 } from "fireorm";
+import { firestore } from "firebase-admin";
 
 export default class {
   constructor(protected collection: any) {}
 
   create(modelObject) {
-    return this.getRepo().create(modelObject);
+    return this.repo().create(modelObject);
   }
 
   delete(id) {
-    return this.getRepo().delete(id);
+    return this.repo().delete(id);
   }
 
   execute(
@@ -21,50 +22,54 @@ export default class {
     limitVal?: number,
     orderByObj?: IOrderByParams
   ) {
-    return this.getRepo().execute(queries, limitVal, orderByObj);
+    return this.repo().execute(queries, limitVal, orderByObj);
   }
 
   async find(id: string) {
-    return { ...(await this.getRepo().findById(id)), id };
+    return { ...(await this.repo().findById(id)), id };
   }
 
-  getRepo() {
+  ref(): firestore.CollectionReference {
+    return (this.repo() as any).firestoreColRef;
+  }
+
+  repo() {
     return GetRepository(this.collection);
   }
 
+  runTransaction(executor) {
+    return this.repo().runTransaction(executor);
+  }
+
   limit(limitTo: number) {
-    return this.getRepo().limit(limitTo);
+    return this.repo().limit(limitTo);
   }
 
   orderByAscending(prop) {
-    return this.getRepo().orderByAscending(prop);
+    return this.repo().orderByAscending(prop);
   }
 
   orderByDescending(prop) {
-    return this.getRepo().orderByDescending(prop);
+    return this.repo().orderByDescending(prop);
   }
 
   whereEqualTo(prop, value: IFirestoreVal) {
-    return this.getRepo().whereEqualTo(prop, value);
+    return this.repo().whereEqualTo(prop, value);
   }
 
   whereGreaterThan(prop, value: IFirestoreVal) {
-    return this.getRepo().whereGreaterThan(prop, value);
+    return this.repo().whereGreaterThan(prop, value);
   }
 
   whereLessThan(prop, value: IFirestoreVal) {
-    return this.getRepo().whereLessThan(prop, value);
+    return this.repo().whereLessThan(prop, value);
   }
 
   whereLessOrEqualThan(prop, value: IFirestoreVal) {
-    return this.getRepo().whereLessOrEqualThan(prop, value);
+    return this.repo().whereLessOrEqualThan(prop, value);
   }
 
   whereArrayContains(prop, value: IFirestoreVal) {
-    return this.getRepo().whereArrayContains(prop, value);
-  }
-
-  runTransaction(executor) {
-    return this.getRepo().runTransaction(executor);
+    return this.repo().whereArrayContains(prop, value);
   }
 }

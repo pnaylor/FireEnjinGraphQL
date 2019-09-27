@@ -6,46 +6,49 @@ class default_1 {
         this.collection = collection;
     }
     create(modelObject) {
-        return this.getRepo().create(modelObject);
+        return this.repo().create(modelObject);
     }
     delete(id) {
-        return this.getRepo().delete(id);
+        return this.repo().delete(id);
     }
     execute(queries, limitVal, orderByObj) {
-        return this.getRepo().execute(queries, limitVal, orderByObj);
+        return this.repo().execute(queries, limitVal, orderByObj);
     }
     async find(id) {
-        return Object.assign(Object.assign({}, (await this.getRepo().findById(id))), { id });
+        return Object.assign(Object.assign({}, (await this.repo().findById(id))), { id });
     }
-    getRepo() {
+    ref() {
+        return this.repo().firestoreColRef;
+    }
+    repo() {
         return fireorm_1.GetRepository(this.collection);
     }
+    runTransaction(executor) {
+        return this.repo().runTransaction(executor);
+    }
     limit(limitTo) {
-        return this.getRepo().limit(limitTo);
+        return this.repo().limit(limitTo);
     }
     orderByAscending(prop) {
-        return this.getRepo().orderByAscending(prop);
+        return this.repo().orderByAscending(prop);
     }
     orderByDescending(prop) {
-        return this.getRepo().orderByDescending(prop);
+        return this.repo().orderByDescending(prop);
     }
     whereEqualTo(prop, value) {
-        return this.getRepo().whereEqualTo(prop, value);
+        return this.repo().whereEqualTo(prop, value);
     }
     whereGreaterThan(prop, value) {
-        return this.getRepo().whereGreaterThan(prop, value);
+        return this.repo().whereGreaterThan(prop, value);
     }
     whereLessThan(prop, value) {
-        return this.getRepo().whereLessThan(prop, value);
+        return this.repo().whereLessThan(prop, value);
     }
     whereLessOrEqualThan(prop, value) {
-        return this.getRepo().whereLessOrEqualThan(prop, value);
+        return this.repo().whereLessOrEqualThan(prop, value);
     }
     whereArrayContains(prop, value) {
-        return this.getRepo().whereArrayContains(prop, value);
-    }
-    runTransaction(executor) {
-        return this.getRepo().runTransaction(executor);
+        return this.repo().whereArrayContains(prop, value);
     }
 }
 exports.default = default_1;

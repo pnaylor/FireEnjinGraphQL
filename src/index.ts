@@ -9,9 +9,6 @@ admin.initializeApp({
   databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
 });
 const firestore = admin.firestore();
-firestore.settings({
-  timestampsInSnapshots: true
-});
 Initialize(firestore);
 
 import { JobModel } from "./models/Job";
@@ -27,6 +24,8 @@ const typeDefs = gql`
 
   type Query {
     jobs: [Job]
+    job(id: String!): Job
+    users: [User]
     user(id: String!): User
   }
 `;
@@ -36,8 +35,34 @@ const resolvers = {
     async jobs() {
       try {
         return (
-          (await jobModel.getRepo().find()) ||
+          (await jobModel
+            .ref()
+            .limit(15)
+            .get()).docs.map(doc => ({ ...doc.data(), id: doc.id })) ||
           new ValidationError("Jobs not found")
+        );
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+    async job(_: null, args: { id: string }) {
+      try {
+        return (
+          (await jobModel.find(args.id)) ||
+          new ValidationError("Job with matching id not found")
+        );
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+    async users() {
+      try {
+        return (
+          (await userModel
+            .ref()
+            .limit(15)
+            .get()).docs.map(doc => ({ ...doc.data(), id: doc.id })) ||
+          new ValidationError("Users not found")
         );
       } catch (error) {
         throw new ApolloError(error);
@@ -45,7 +70,6 @@ const resolvers = {
     },
     async user(_: null, args: { id: string }) {
       try {
-        console.log("wee");
         return (
           (await userModel.find(args.id)) ||
           new ValidationError("User with matching id not found")
@@ -59,7 +83,7 @@ const resolvers = {
     async jobs(user) {
       try {
         return (
-          (await jobModel.whereEqualTo("user", user.id).find()) ||
+          (await userModel.jobsForId(jobModel, user.id)) ||
           new ValidationError("Jobs not found for user")
         );
       } catch (error) {
@@ -69,6 +93,7 @@ const resolvers = {
   },
   Job: {
     async user(job) {
+      console.log(job);
       try {
         return (
           (await userModel.find(job.user.id)) ||

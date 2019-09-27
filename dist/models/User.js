@@ -24,6 +24,12 @@ class UserModel extends Model_1.default {
     jobs: [Job]
   }`;
     }
+    async jobsForId(jobModel, id) {
+        return (await jobModel
+            .ref()
+            .where("user", "==", this.ref().doc(id))
+            .get()).docs.map(doc => (Object.assign(Object.assign({}, doc.data()), { id: doc.id })));
+    }
 }
 exports.UserModel = UserModel;
 //# sourceMappingURL=User.js.map

@@ -9,9 +9,6 @@ admin.initializeApp({
     databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
 });
 const firestore = admin.firestore();
-firestore.settings({
-    timestampsInSnapshots: true
-});
 fireorm_1.Initialize(firestore);
 const Job_1 = require("./models/Job");
 const User_1 = require("./models/User");
@@ -24,6 +21,8 @@ const typeDefs = apollo_server_1.gql `
 
   type Query {
     jobs: [Job]
+    job(id: String!): Job
+    users: [User]
     user(id: String!): User
   }
 `;
@@ -31,8 +30,32 @@ const resolvers = {
     Query: {
         async jobs() {
             try {
-                return ((await jobModel.getRepo().find()) ||
+                return ((await jobModel
+                    .ref()
+                    .limit(15)
+                    .get()).docs.map(doc => (Object.assign(Object.assign({}, doc.data()), { id: doc.id }))) ||
                     new apollo_server_1.ValidationError("Jobs not found"));
+            }
+            catch (error) {
+                throw new apollo_server_1.ApolloError(error);
+            }
+        },
+        async job(_, args) {
+            try {
+                return ((await jobModel.find(args.id)) ||
+                    new apollo_server_1.ValidationError("Job with matching id not found"));
+            }
+            catch (error) {
+                throw new apollo_server_1.ApolloError(error);
+            }
+        },
+        async users() {
+            try {
+                return ((await userModel
+                    .ref()
+                    .limit(15)
+                    .get()).docs.map(doc => (Object.assign(Object.assign({}, doc.data()), { id: doc.id }))) ||
+                    new apollo_server_1.ValidationError("Users not found"));
             }
             catch (error) {
                 throw new apollo_server_1.ApolloError(error);
@@ -40,7 +63,6 @@ const resolvers = {
         },
         async user(_, args) {
             try {
-                console.log("wee");
                 return ((await userModel.find(args.id)) ||
                     new apollo_server_1.ValidationError("User with matching id not found"));
             }
@@ -52,7 +74,7 @@ const resolvers = {
     User: {
         async jobs(user) {
             try {
-                return ((await jobModel.whereEqualTo("user", user.id).find()) ||
+                return ((await userModel.jobsForId(jobModel, user.id)) ||
                     new apollo_server_1.ValidationError("Jobs not found for user"));
             }
             catch (error) {
@@ -62,6 +84,7 @@ const resolvers = {
     },
     Job: {
         async user(job) {
+            console.log(job);
             try {
                 return ((await userModel.find(job.user.id)) ||
                     new apollo_server_1.ValidationError("User for Job not found"));

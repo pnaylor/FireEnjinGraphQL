@@ -1,6 +1,7 @@
 import { Collection } from "fireorm";
 
 import Model from "./Model";
+import { JobModel } from "./Job";
 
 @Collection("users")
 export class User {
@@ -18,5 +19,12 @@ export class UserModel extends Model {
 
   constructor() {
     super(User);
+  }
+
+  async jobsForId(jobModel: JobModel, id: string) {
+    return (await jobModel
+      .ref()
+      .where("user", "==", this.ref().doc(id))
+      .get()).docs.map(doc => ({ ...doc.data(), id: doc.id }));
   }
 }
