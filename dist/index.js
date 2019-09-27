@@ -84,7 +84,6 @@ const resolvers = {
     },
     Job: {
         async user(job) {
-            console.log(job);
             try {
                 return ((await userModel.find(job.user.id)) ||
                     new apollo_server_1.ValidationError("User for Job not found"));

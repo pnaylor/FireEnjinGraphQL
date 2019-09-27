@@ -93,7 +93,6 @@ const resolvers = {
   },
   Job: {
     async user(job) {
-      console.log(job);
       try {
         return (
           (await userModel.find(job.user.id)) ||
