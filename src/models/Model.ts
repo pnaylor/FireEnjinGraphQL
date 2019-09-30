@@ -26,7 +26,10 @@ export default class {
   }
 
   async find(id: string) {
-    return { ...(await this.repo().findById(id)), id };
+    const data = await this.repo().findById(id);
+    data.id = id;
+
+    return data;
   }
 
   ref(): firestore.CollectionReference {
