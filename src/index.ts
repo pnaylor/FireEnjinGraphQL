@@ -16,8 +16,6 @@ Initialize(firestore);
 const models: any = {};
 const resolvers = [];
 
-console.log("wee");
-
 glob("src/models/**/!(Model).ts", async (error, files) => {
   for (const file of files) {
     const importedFile = await import(
