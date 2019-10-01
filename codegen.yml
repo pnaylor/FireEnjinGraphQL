@@ -1,0 +1,8 @@
+overwrite: true
+schema: "schema.gql"
+generates:
+  components.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-stencil-apollo"
