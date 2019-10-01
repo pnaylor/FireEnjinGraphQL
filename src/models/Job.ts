@@ -20,9 +20,17 @@ export class Job {
   id: string;
   @Field()
   customer: string;
-  @Field()
+  @Field({
+    description: "The address of the job"
+  })
   address: string;
-  @Field() user: User;
+  @Field({
+    nullable: true,
+    description: "The primary phone number to contact for the job"
+  })
+  phone?: string;
+  @Field()
+  user: User;
 }
 
 export class JobModel extends Model {
@@ -42,7 +50,10 @@ export class JobModel extends Model {
 
 @Resolver(of => Job)
 export class JobResolver {
-  @Query(returns => Job, { nullable: true })
+  @Query(returns => Job, {
+    nullable: true,
+    description: "Get a specific job document from the database"
+  })
   job(@Arg("id") id: string): Promise<Job> {
     return new JobModel().find(id);
   }
