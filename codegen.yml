@@ -1,8 +1,15 @@
 overwrite: true
 schema: "schema.gql"
+documents: "src/**/*.gql"
 generates:
-  components.tsx:
+  generated/components.tsx:
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-stencil-apollo"
+  generated/definitions.d.ts:
+    plugins:
+      - "typescript"
+  generated/graphql.schema.json:
+    plugins:
+      - "introspection"

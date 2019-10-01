@@ -4,10 +4,39 @@ import {
   IFirestoreVal,
   IOrderByParams
 } from "fireorm";
+import { Arg, ClassType, Mutation, Query, Resolver } from "type-graphql";
 import { firestore } from "firebase-admin";
 
+function createResolver<T extends ClassType>(
+  suffix: string,
+  returnType: T,
+  entity: any
+) {
+  @Resolver()
+  class BaseResolver {
+    @Query(returns => returnType, {
+      nullable: true,
+      description: `Get a specific ${suffix.toLowerCase()} document from the database`
+    })
+    [suffix.toLowerCase()](@Arg("id") id: string): Promise<T> {
+      console.log(suffix, entity);
+      return new entity().find(id);
+    }
+  }
+
+  return BaseResolver;
+}
+
 export default class {
-  constructor(protected collection: any) {}
+  baseResolver: any;
+
+  constructor(protected collection: any) {
+    this.baseResolver = this.getBaseResolver(collection.name, collection);
+  }
+
+  getBaseResolver(name, collection) {
+    return createResolver(name, collection, collection);
+  }
 
   create(modelObject) {
     return this.repo().create(modelObject);

@@ -27,5 +27,8 @@ type Query {
 type User {
   id: ID!
   name: String!
+
+  # This is the name of the persons doggo
+  dog: String!
   jobs: [Job!]!
 }

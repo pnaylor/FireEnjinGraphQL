@@ -20,6 +20,10 @@ export class User {
   id: string;
   @Field()
   name?: string;
+  @Field({
+    description: "This is the name of the persons doggo"
+  })
+  dog?: string;
   @Field(() => [Job])
   jobs?: Job[];
 }
