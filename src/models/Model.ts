@@ -4,7 +4,16 @@ import {
   IFirestoreVal,
   IOrderByParams
 } from "fireorm";
-import { Arg, ClassType, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  ClassType,
+  Field,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+  ArgsType
+} from "type-graphql";
 import { firestore } from "firebase-admin";
 
 function createResolver<T extends ClassType>(
@@ -12,13 +21,13 @@ function createResolver<T extends ClassType>(
   returnType: T,
   model: any
 ) {
-  @Resolver()
+  @Resolver(of => returnType)
   class BaseResolver {
     @Query(returns => returnType, {
       nullable: true,
       description: `Get a specific ${suffix.toLowerCase()} document from the collection.`
     })
-    async [suffix.toLowerCase()](@Arg("id") id: string): Promise<T> {
+    async [`${suffix.toLowerCase()}`](@Arg("id") id: string): Promise<T> {
       return await model.find(id);
     }
 
@@ -26,12 +35,22 @@ function createResolver<T extends ClassType>(
       nullable: true,
       description: `Get a list of ${suffix.toLowerCase()} documents from the collection.`
     })
-    async [suffix.toLowerCase() + "s"](): Promise<any[]> {
+    async [`${suffix.toLowerCase()}s`](): Promise<any[]> {
       return (await model
         .ref()
         .limit(15)
         .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
     }
+
+    // @Mutation(returns => returnType)
+    // async [`add${suffix.toLowerCase()}`](
+    //   @Arg("data", () => modelData, {
+    //     description: `Add a new document to the ${suffix.toLowerCase()} collection.`
+    //   })
+    //   data: any
+    // ) {
+    //   return await model.create(data);
+    // }
   }
 
   return BaseResolver;
