@@ -10,17 +10,27 @@ import { firestore } from "firebase-admin";
 function createResolver<T extends ClassType>(
   suffix: string,
   returnType: T,
-  entity: any
+  model: any
 ) {
   @Resolver()
   class BaseResolver {
     @Query(returns => returnType, {
       nullable: true,
-      description: `Get a specific ${suffix.toLowerCase()} document from the database`
+      description: `Get a specific ${suffix.toLowerCase()} document from the collection.`
     })
-    [suffix.toLowerCase()](@Arg("id") id: string): Promise<T> {
-      console.log(suffix, entity);
-      return new entity().find(id);
+    async [suffix.toLowerCase()](@Arg("id") id: string): Promise<T> {
+      return await model.find(id);
+    }
+
+    @Query(returns => [returnType], {
+      nullable: true,
+      description: `Get a list of ${suffix.toLowerCase()} documents from the collection.`
+    })
+    async [suffix.toLowerCase() + "s"](): Promise<any[]> {
+      return (await model
+        .ref()
+        .limit(15)
+        .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
     }
   }
 
@@ -35,7 +45,7 @@ export default class {
   }
 
   getBaseResolver(name, collection) {
-    return createResolver(name, collection, collection);
+    return createResolver(name, collection, this);
   }
 
   create(modelObject) {

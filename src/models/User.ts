@@ -20,10 +20,6 @@ export class User {
   id: string;
   @Field()
   name?: string;
-  @Field({
-    description: "This is the name of the persons doggo"
-  })
-  dog?: string;
   @Field(() => [Job])
   jobs?: Job[];
 }
@@ -42,20 +38,7 @@ export class UserModel extends Model {
 }
 
 @Resolver(of => User)
-export class UserResolver {
-  @Query(returns => User, { nullable: true })
-  user(@Arg("id") id: string): Promise<User> {
-    return new UserModel().find(id);
-  }
-
-  @Query(returns => [User])
-  async users(): Promise<User[]> {
-    return (await new UserModel()
-      .ref()
-      .limit(15)
-      .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
-  }
-
+export class UserResolver extends new UserModel().baseResolver {
   @FieldResolver()
   jobs(@Root() user: User): Promise<Job[]> {
     return new UserModel().jobsForId(user.id);

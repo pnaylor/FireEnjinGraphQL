@@ -16,19 +16,21 @@ type Job {
 }
 
 type Query {
-  user(id: String!): User
-  users: [User!]!
-
-  # Get a specific job document from the database
+  # Get a specific job document from the collection.
   job(id: String!): Job
-  jobs: [Job!]!
+
+  # Get a list of job documents from the collection.
+  jobs: [Job!]
+
+  # Get a specific user document from the collection.
+  user(id: String!): User
+
+  # Get a list of user documents from the collection.
+  users: [User!]
 }
 
 type User {
   id: ID!
   name: String!
-
-  # This is the name of the persons doggo
-  dog: String!
   jobs: [Job!]!
 }

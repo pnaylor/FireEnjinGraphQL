@@ -2,6 +2,5 @@ query findUser($userId: String!) {
   user(id: $userId) {
     id
     name
-    dog
   }
 }
