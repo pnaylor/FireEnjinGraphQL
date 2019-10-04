@@ -1,13 +1,10 @@
 import { Collection } from "fireorm";
 import {
-  Arg,
-  ArgsType,
   Field,
   ID,
   ObjectType,
   Resolver,
   Root,
-  Query,
   FieldResolver,
   InputType
 } from "type-graphql";
