@@ -4,22 +4,14 @@ import {
   IFirestoreVal,
   IOrderByParams
 } from "fireorm";
-import {
-  Arg,
-  ClassType,
-  Field,
-  InputType,
-  Mutation,
-  Query,
-  Resolver,
-  ArgsType
-} from "type-graphql";
+import { Arg, ClassType, Mutation, Query, Resolver } from "type-graphql";
 import { firestore } from "firebase-admin";
 
 function createResolver<T extends ClassType>(
   suffix: string,
   returnType: T,
-  model: any
+  model: any,
+  inputType: any
 ) {
   @Resolver(of => returnType)
   class BaseResolver {
@@ -42,15 +34,42 @@ function createResolver<T extends ClassType>(
         .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
     }
 
-    // @Mutation(returns => returnType)
-    // async [`add${suffix.toLowerCase()}`](
-    //   @Arg("data", () => modelData, {
-    //     description: `Add a new document to the ${suffix.toLowerCase()} collection.`
-    //   })
-    //   data: any
-    // ) {
-    //   return await model.create(data);
-    // }
+    @Mutation(returns => returnType)
+    async [`add${suffix}`](
+      @Arg("data", () => inputType, {
+        description: `Add a new document to the ${suffix.toLowerCase()} collection.`
+      })
+      data: any
+    ) {
+      return await model.create(data);
+    }
+
+    @Mutation(returns => returnType)
+    async [`delete${suffix}`](
+      @Arg("id", () => String, {
+        description: `The ID of the document being deleted in the ${suffix.toLowerCase()} collection`
+      })
+      id: string
+    ) {
+      const modelBefore = await model.find(id);
+      await model.delete(id);
+
+      return modelBefore;
+    }
+
+    @Mutation(returns => returnType)
+    async [`edit${suffix}`](
+      @Arg("id", () => String, {
+        description: `The ID of the document in the ${suffix.toLowerCase()} collection`
+      })
+      id: string,
+      @Arg("data", () => inputType, {
+        description: `Update a document in the ${suffix.toLowerCase()} collection.`
+      })
+      data: any
+    ) {
+      return await model.update({ id, ...data });
+    }
   }
 
   return BaseResolver;
@@ -59,12 +78,16 @@ function createResolver<T extends ClassType>(
 export default class {
   baseResolver: any;
 
-  constructor(protected collection: any) {
-    this.baseResolver = this.getBaseResolver(collection.name, collection);
+  constructor(protected collection: any, protected inputType?: any) {
+    this.baseResolver = this.getBaseResolver(
+      collection.name,
+      collection,
+      inputType
+    );
   }
 
-  getBaseResolver(name, collection) {
-    return createResolver(name, collection, this);
+  getBaseResolver(name, collection, inputType) {
+    return createResolver(name, collection, this, inputType);
   }
 
   create(modelObject) {
@@ -112,6 +135,10 @@ export default class {
 
   orderByDescending(prop) {
     return this.repo().orderByDescending(prop);
+  }
+
+  update(data: any) {
+    return this.repo().update(data);
   }
 
   whereEqualTo(prop, value: IFirestoreVal) {

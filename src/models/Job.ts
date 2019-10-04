@@ -7,19 +7,23 @@ import {
   Resolver,
   Root,
   Query,
-  FieldResolver
+  FieldResolver,
+  ArgsType,
+  InputType
 } from "type-graphql";
 
 import Model from "./Model";
 import { User, UserModel } from "./User";
 
 @Collection("jobs")
-@ObjectType()
+@ObjectType({
+  description: "The information for a job ticket"
+})
 export class Job {
   @Field(() => ID)
   id: string;
-  @Field()
-  customer: string;
+  @Field({ nullable: true })
+  customer?: string;
   @Field({
     description: "The address of the job"
   })
@@ -33,9 +37,17 @@ export class Job {
   user: User;
 }
 
+@InputType({ description: "Editable job data" })
+class JobInput implements Partial<User> {
+  @Field(() => ID)
+  id: string;
+  @Field({ nullable: true })
+  customer?: string;
+}
+
 export class JobModel extends Model {
   constructor() {
-    super(Job);
+    super(Job, JobInput);
   }
 
   async find(id: string): Promise<Job> {

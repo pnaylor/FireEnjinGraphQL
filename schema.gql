@@ -3,9 +3,10 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+# The information for a job ticket
 type Job {
   id: ID!
-  customer: String!
+  customer: String
 
   # The address of the job
   address: String!
@@ -13,6 +14,45 @@ type Job {
   # The primary phone number to contact for the job
   phone: String
   user: User!
+}
+
+# Editable job data
+input JobInput {
+  id: ID!
+  customer: String
+}
+
+type Mutation {
+  addJob(
+    # Add a new document to the job collection.
+    data: JobInput!
+  ): Job!
+  deleteJob(
+    # The ID of the document being deleted in the job collection
+    id: String!
+  ): Job!
+  editJob(
+    # Update a document in the job collection.
+    data: JobInput!
+
+    # The ID of the document in the job collection
+    id: String!
+  ): Job!
+  addUser(
+    # Add a new document to the user collection.
+    data: UserInput!
+  ): User!
+  deleteUser(
+    # The ID of the document being deleted in the user collection
+    id: String!
+  ): User!
+  editUser(
+    # Update a document in the user collection.
+    data: UserInput!
+
+    # The ID of the document in the user collection
+    id: String!
+  ): User!
 }
 
 type Query {
@@ -29,8 +69,14 @@ type Query {
   users: [User!]
 }
 
+# The information for a user
 type User {
   id: ID!
   name: String!
   jobs: [Job!]!
+}
+
+# Editable user data
+input UserInput {
+  name: String
 }

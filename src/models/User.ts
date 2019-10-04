@@ -1,20 +1,22 @@
 import { Collection } from "fireorm";
 import {
   Arg,
+  ArgsType,
   Field,
   ID,
   ObjectType,
   Resolver,
   Root,
   Query,
-  FieldResolver
+  FieldResolver,
+  InputType
 } from "type-graphql";
 
 import Model from "./Model";
 import { Job, JobModel } from "./Job";
 
 @Collection("users")
-@ObjectType()
+@ObjectType({ description: "The information for a user" })
 export class User {
   @Field(() => ID)
   id: string;
@@ -24,9 +26,15 @@ export class User {
   jobs?: Job[];
 }
 
+@InputType({ description: "Editable user data" })
+class UserInput implements Partial<User> {
+  @Field({ nullable: true })
+  name?: string;
+}
+
 export class UserModel extends Model {
   constructor() {
-    super(User);
+    super(User, UserInput);
   }
 
   async jobsForId(id: string): Promise<Job[]> {
