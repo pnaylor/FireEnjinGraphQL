@@ -6,9 +6,10 @@ This is a back-end development stack that uses Firebase and GraphQL with the mag
 
 1. git clone https://github.com/MadnessLabs/FireEnjinGraphQL
 2. npm install
-3. Download Service Account JSON from Firebase Project Settings
+3. Download Service Account JSON from Firebase Project Settings and put it as service-account.json in the root. (See GIF below.)
+   ![LT6RvC27Qp](https://user-images.githubusercontent.com/4184680/66259522-8fba8180-e777-11e9-8e37-a7034c06ebd9.gif)
 
-# Commands
+# How to Play
 
 ## build
 
@@ -41,3 +42,9 @@ This will run tests via jest.
 ## test:watch
 
 This will run a watcher on all your tests
+
+# Where to Next
+
+Below is a link to a Notion note where we are actively working on fleshing out this full-stack structure to make building a project simpler. Any feedback is welcomed, please send us an email to info@MadnessLabs.net or find us on Twitter @MadnessLabs.
+
+https://www.notion.so/madnesslabs/Project-Skeleton-fc1c44581c714be3abbe51df3fed48f1
