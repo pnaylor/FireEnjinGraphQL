@@ -4,7 +4,6 @@
   "scripts": {
     "build": "tsc",
     "codegen": "graphql-codegen --config codegen.yml",
-    "docs": "typedoc --mode modules",
     "deploy": "npm run build && gcloud app deploy",
     "semantic-release": "semantic-release",
     "serve": "ts-node-dev --respawn src/index.ts",
