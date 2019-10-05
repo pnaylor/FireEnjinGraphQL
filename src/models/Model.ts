@@ -76,18 +76,20 @@ function createResolver<T extends ClassType>(
 }
 
 export default class {
-  baseResolver: any;
+  Resolver: any;
 
-  constructor(protected collection: any, protected inputType?: any) {
-    this.baseResolver = this.getBaseResolver(
-      collection.name,
-      collection,
-      inputType
+  constructor(
+    protected options: {
+      collection: any;
+      inputType?: any;
+    }
+  ) {
+    this.Resolver = createResolver(
+      options.collection.name,
+      options.collection,
+      this,
+      options.inputType
     );
-  }
-
-  getBaseResolver(name, collection, inputType) {
-    return createResolver(name, collection, this, inputType);
   }
 
   create(modelObject) {
@@ -118,7 +120,7 @@ export default class {
   }
 
   repo() {
-    return GetRepository(this.collection);
+    return GetRepository(this.options.collection);
   }
 
   runTransaction(executor) {

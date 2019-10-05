@@ -3,11 +3,14 @@
   "version": "0.0.0-development",
   "scripts": {
     "build": "tsc",
-    "serve": "ts-node-dev --respawn src/index.ts",
-    "start": "npm run serve",
+    "codegen": "graphql-codegen --config codegen.yml",
+    "docs": "typedoc --mode modules",
     "deploy": "npm run build && gcloud app deploy",
     "semantic-release": "semantic-release",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "serve": "ts-node-dev --respawn src/index.ts",
+    "start": "npm run serve",
+    "test": "jest --no-cache",
+    "test:watch": "jest --watch --no-cache"
   },
   "main": "dist/index.js",
   "dependencies": {
@@ -31,7 +34,10 @@
     "@graphql-codegen/typescript-operations": "1.7.0",
     "@graphql-codegen/typescript-stencil-apollo": "1.7.0",
     "@graphql-codegen/typescript-type-graphql": "^1.7.0",
+    "@types/jest": "^24.0.18",
+    "jest": "^24.9.0",
     "semantic-release": "^15.13.24",
+    "ts-jest": "^24.1.0",
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"
@@ -42,5 +48,21 @@
   },
   "publishConfig": {
     "access": "restricted"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testURL": "http://localhost",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

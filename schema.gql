@@ -18,7 +18,6 @@ type Job {
 
 # Editable job data
 input JobInput {
-  id: ID!
   customer: String
 }
 

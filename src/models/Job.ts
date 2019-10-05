@@ -30,21 +30,22 @@ export class Job {
     description: "The primary phone number to contact for the job"
   })
   phone?: string;
-  @Field()
+  @Field(() => User)
   user: User;
 }
 
 @InputType({ description: "Editable job data" })
-class JobInput implements Partial<User> {
-  @Field(() => ID)
-  id: string;
+export class JobInput implements Partial<Job> {
   @Field({ nullable: true })
   customer?: string;
 }
 
 export class JobModel extends Model {
   constructor() {
-    super(Job, JobInput);
+    super({
+      collection: Job,
+      inputType: JobInput
+    });
   }
 
   async find(id: string): Promise<Job> {
@@ -58,7 +59,7 @@ export class JobModel extends Model {
 }
 
 @Resolver(of => Job)
-export class JobResolver extends new JobModel().baseResolver {
+export class JobResolver extends new JobModel().Resolver {
   @FieldResolver()
   user(@Root() job: Job): Promise<User> {
     return new UserModel().find(job.user.id);

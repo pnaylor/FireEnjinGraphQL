@@ -1,18 +1,10 @@
-import * as admin from "firebase-admin";
-import { Initialize } from "fireorm";
-import { ApolloServer, ApolloError, ValidationError, gql } from "apollo-server";
+import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 
-const serviceAccount = require("../service-account.json");
+import connect from "./connect";
 
 (async () => {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
-  });
-  const firestore = admin.firestore();
-  Initialize(firestore);
-
+  connect();
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [__dirname + "/models/**/*.ts"],

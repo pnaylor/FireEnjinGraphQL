@@ -17,21 +17,24 @@ import { Job, JobModel } from "./Job";
 export class User {
   @Field(() => ID)
   id: string;
-  @Field()
+  @Field(() => String)
   name?: string;
   @Field(() => [Job])
   jobs?: Job[];
 }
 
 @InputType({ description: "Editable user data" })
-class UserInput implements Partial<User> {
+export class UserInput implements Partial<User> {
   @Field({ nullable: true })
   name?: string;
 }
 
 export class UserModel extends Model {
   constructor() {
-    super(User, UserInput);
+    super({
+      collection: User,
+      inputType: UserInput
+    });
   }
 
   async jobsForId(id: string): Promise<Job[]> {
@@ -43,8 +46,10 @@ export class UserModel extends Model {
 }
 
 @Resolver(of => User)
-export class UserResolver extends new UserModel().baseResolver {
-  @FieldResolver()
+export class UserResolver extends new UserModel().Resolver {
+  @FieldResolver({
+    description: "A list of jobs the user is attached to."
+  })
   jobs(@Root() user: User): Promise<Job[]> {
     return new UserModel().jobsForId(user.id);
   }
