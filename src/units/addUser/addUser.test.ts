@@ -1,23 +1,16 @@
 import connect from "../../connect";
+connect();
 
-import { UserModel } from "../../models/User";
+import addUser from "./addUser";
 
 describe("Add User", () => {
   it("Should add a user", async done => {
-    connect();
-    setTimeout(async () => {
-      const User = new UserModel();
-      console.log(User);
-      expect(true).toBeTruthy();
-      done();
-    }, 3000);
-
-    // const newUser = await addUser({
-    //   name: "Darin"
-    // });
-    // console.log(newUser);
-    // expect(newUser).toMatchObject({
-    //   name: "Darin"
-    // });
+    const newUser = await addUser({
+      name: "Darin"
+    });
+    expect(newUser).toMatchObject({
+      name: "Darin"
+    });
+    done();
   });
 });
