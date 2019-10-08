@@ -19,6 +19,10 @@ Run TypeScript compiler to build project to dist/ folder.
 
 Generate typings and StencilJS components from models and queries.
 
+## env
+
+Copy files from env folder and overwrite specific files per environment.
+
 ## docs
 
 PENDING...
@@ -26,6 +30,10 @@ PENDING...
 ## deploy
 
 Deploy the project to Firebase (Google Cloud).
+
+## release
+
+Build a release of the backend, typings, and Stencil components.
 
 ## serve
 
