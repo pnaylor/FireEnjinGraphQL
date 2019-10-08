@@ -2,6 +2,7 @@ import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 
 import connect from "./connect";
+import env from "./env";
 
 (async () => {
   connect();
@@ -13,12 +14,13 @@ import connect from "./connect";
         commentDescriptions: true
       }
     }),
-    engine: {
-      apiKey: "service:MadnessLabs-9317:L-opKPzu2tawg5jcRTbEyg"
-    },
-    introspection: true
+    introspection: env("graphql.introspection", true)
   });
 
-  const serverInfo = await server.listen({ port: process.env.PORT || 4000 });
-  console.log(`🚀  Server ready at ${serverInfo.url}`);
+  const serverInfo = await server.listen({ port: env("graphql.port", 4000) });
+  console.log(
+    `🚀  Server running on ${env("env", "local")} and ready at ${
+      serverInfo.url
+    }`
+  );
 })();
