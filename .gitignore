@@ -3,3 +3,4 @@ dist/
 service-account.json
 env/live
 /environment.json
+.history

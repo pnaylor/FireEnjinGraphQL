@@ -1,5 +1,6 @@
 import { Collection } from "fireorm";
 import {
+  Authorized,
   Field,
   ID,
   ObjectType,
@@ -19,6 +20,7 @@ export class User {
   id: string;
   @Field(() => String)
   name?: string;
+  @Authorized()
   @Field(() => [Job])
   jobs?: Job[];
 }
