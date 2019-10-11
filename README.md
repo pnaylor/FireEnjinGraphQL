@@ -13,7 +13,11 @@ This is a back-end development stack that uses Firebase and GraphQL with the mag
 
 ## build
 
-Run TypeScript compiler to build project to dist/ folder.
+Delete the dist folder and run TypeScript compiler to build project.
+
+## clean
+
+Delete the dist folder.
 
 ## codegen
 
@@ -34,6 +38,14 @@ Deploy the project to Firebase (Google Cloud).
 ## release
 
 Build a release of the backend, typings, and Stencil components.
+
+## seed
+
+Deploy seeds from src/seeds to firestore collections.
+
+## seed:clone
+
+Copy down data from firestore collections to src/seeds.
 
 ## serve
 
