@@ -1,9 +1,10 @@
 const fs = require("fs-extra");
-const glob = require("glob");
+const globby = require("globby");
 
 const currentEnv = process.argv[2] ? process.argv[2] : "local";
 
-glob(`env/${currentEnv}/**/*.*`, {}, function(er, files) {
+(async () => {
+  const files = await globby(`env/${currentEnv}/**/*.*`);
   console.log(
     `Running ${currentEnv} environment setup by copying ${files.length} files...`
   );
@@ -16,4 +17,4 @@ glob(`env/${currentEnv}/**/*.*`, {}, function(er, files) {
         .join("/")
     );
   }
-});
+})();

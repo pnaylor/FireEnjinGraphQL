@@ -18,8 +18,13 @@ import { Job, JobModel } from "./Job";
 export class User {
   @Field(() => ID)
   id: string;
+
   @Field(() => String)
   name?: string;
+
+  @Field(() => String)
+  email?: string;
+
   @Authorized()
   @Field(() => [Job])
   jobs?: Job[];
