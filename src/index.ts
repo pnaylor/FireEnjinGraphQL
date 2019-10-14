@@ -11,15 +11,20 @@ import env from "./env";
     context: env("graphql.tokenAuth", true)
       ? ({ req }) => ({
           token:
-            req.headers.authorization.replace(
-              env("graphql.tokenPrefix", "Bearer "),
-              ""
-            ) || null,
+            req.headers && req.headers.authorization
+              ? req.headers.authorization.replace(
+                  env("graphql.tokenPrefix", "Bearer "),
+                  ""
+                )
+              : null,
           env: env("env")
         })
       : null,
     schema: await buildSchema({
-      resolvers: [__dirname + "/models/**/*.ts"],
+      resolvers: [
+        __dirname + "/models/**/*.ts",
+        __dirname + "/resolvers/**/*.ts"
+      ],
       emitSchemaFile: {
         path: __dirname + "/../schema.gql",
         commentDescriptions: true

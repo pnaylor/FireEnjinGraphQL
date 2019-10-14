@@ -3,6 +3,12 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+# The id of the job and user being tied together.
+input AddUserToJobInput {
+  user: String!
+  job: String!
+}
+
 # The information for a job ticket
 type Job {
   id: ID!
@@ -52,6 +58,7 @@ type Mutation {
     # The ID of the document in the user collection
     id: String!
   ): User!
+  addUserToJob(data: AddUserToJobInput!): Job!
 }
 
 type Query {
