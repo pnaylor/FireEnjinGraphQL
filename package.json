@@ -7,7 +7,6 @@
     "codegen": "graphql-codegen --config codegen.yml",
     "deploy": "npm run build && gcloud app deploy",
     "env": "node tasks/env",
-    "postinstall": "npm run release",
     "release": "npm run build && npm run codegen",
     "semantic-release": "semantic-release",
     "seed": "npm run build && node tasks/runSeeds.js",
