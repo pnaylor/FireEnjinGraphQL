@@ -6,6 +6,23 @@ import {
 } from "fireorm";
 import { Arg, ClassType, Mutation, Query, Resolver } from "type-graphql";
 import { firestore } from "firebase-admin";
+import * as pluralize from "pluralize";
+
+/**
+ * Add capitalization on the first letter of a string
+ * @param str The string being capped
+ */
+function capFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Remove capitalization of the first letter of a string
+ * @param str The string being uncapped
+ */
+function uncapFirstLetter(str: string) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
 
 /**
  * Create basic CRUD functionality with resolvers
@@ -15,88 +32,129 @@ import { firestore } from "firebase-admin";
  * @param inputType The input types
  */
 function createResolver<T extends ClassType>(
-  suffix: string,
+  modelName: string,
+  collectionName: string,
   returnType: T,
   model: any,
   inputType: any
 ) {
-  @Resolver(of => returnType)
-  class BaseResolver {
-    @Query(returns => returnType, {
-      nullable: true,
-      description: `Get a specific ${suffix.toLowerCase()} document from the collection.`
-    })
-    async [`${suffix.toLowerCase()}`](@Arg("id") id: string): Promise<T> {
-      return await model.find(id);
-    }
-
-    @Query(returns => [returnType], {
-      nullable: true,
-      description: `Get a list of ${suffix.toLowerCase()} documents from the collection.`
-    })
-    async [`${suffix.toLowerCase()}s`](): Promise<any[]> {
-      return (await model
-        .ref()
-        .limit(15)
-        .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
-    }
-
-    @Mutation(returns => returnType)
-    async [`add${suffix}`](
-      @Arg("data", () => inputType, {
-        description: `Add a new document to the ${suffix.toLowerCase()} collection.`
+  if (inputType) {
+    @Resolver(of => returnType)
+    class CrudResolver {
+      @Query(returns => returnType, {
+        nullable: true,
+        description: `Get a specific ${modelName} document from the ${collectionName} collection.`
       })
-      data: any
-    ) {
-      return await model.create(data);
+      async [`${uncapFirstLetter(modelName)}`](
+        @Arg("id") id: string
+      ): Promise<T> {
+        return await model.find(id);
+      }
+
+      @Query(returns => [returnType], {
+        nullable: true,
+        description: `Get a list of ${modelName} documents from the ${collectionName} collection.`
+      })
+      async [`${uncapFirstLetter(collectionName)}`](): Promise<any[]> {
+        return (await model
+          .ref()
+          .limit(15)
+          .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
+      }
+
+      @Mutation(returns => returnType)
+      async [`add${modelName}`](
+        @Arg("data", () => inputType, {
+          description: `Add a new ${modelName} document to the ${collectionName} collection.`
+        })
+        data: any
+      ) {
+        return await model.create(data);
+      }
+
+      @Mutation(returns => returnType)
+      async [`delete${modelName}`](
+        @Arg("id", () => String, {
+          description: `The ID of the ${modelName} document being deleted in the ${collectionName} collection`
+        })
+        id: string
+      ) {
+        const modelBefore = await model.find(id);
+        await model.delete(id);
+
+        return modelBefore;
+      }
+
+      @Mutation(returns => returnType)
+      async [`edit${modelName}`](
+        @Arg("id", () => String, {
+          description: `The ID of the ${modelName} document in the ${collectionName} collection`
+        })
+        id: string,
+        @Arg("data", () => inputType, {
+          description: `Update a ${modelName} document in the ${collectionName} collection.`
+        })
+        data: any
+      ) {
+        return await model.update({ id, ...data });
+      }
     }
 
-    @Mutation(returns => returnType)
-    async [`delete${suffix}`](
-      @Arg("id", () => String, {
-        description: `The ID of the document being deleted in the ${suffix.toLowerCase()} collection`
+    return CrudResolver;
+  } else {
+    @Resolver(of => returnType)
+    class BaseResolver {
+      @Query(returns => returnType, {
+        nullable: true,
+        description: `Get a specific ${modelName} document from the ${collectionName} collection.`
       })
-      id: string
-    ) {
-      const modelBefore = await model.find(id);
-      await model.delete(id);
+      async [`${uncapFirstLetter(modelName)}`](
+        @Arg("id") id: string
+      ): Promise<T> {
+        return await model.find(id);
+      }
 
-      return modelBefore;
+      @Query(returns => [returnType], {
+        nullable: true,
+        description: `Get a list of ${modelName} documents from the ${collectionName} collection.`
+      })
+      async [`${uncapFirstLetter(collectionName)}`](): Promise<any[]> {
+        return (await model
+          .ref()
+          .limit(15)
+          .get()).docs.map((doc: any) => ({ ...doc.data(), id: doc.id }));
+      }
     }
 
-    @Mutation(returns => returnType)
-    async [`edit${suffix}`](
-      @Arg("id", () => String, {
-        description: `The ID of the document in the ${suffix.toLowerCase()} collection`
-      })
-      id: string,
-      @Arg("data", () => inputType, {
-        description: `Update a document in the ${suffix.toLowerCase()} collection.`
-      })
-      data: any
-    ) {
-      return await model.update({ id, ...data });
-    }
+    return BaseResolver;
   }
-
-  return BaseResolver;
 }
 
 export default class {
   Resolver: any;
+  collectionName: string;
 
   constructor(
     protected options: {
-      collection: any;
+      docSchema: any;
       inputType?: any;
+      collectionName?: string;
     }
   ) {
-    this.Resolver = createResolver(
-      options.collection.name,
-      options.collection,
-      this,
-      options.inputType
-    );
+    if (options) {
+      this.collectionName = options.collectionName
+        ? options.collectionName
+        : pluralize(options.docSchema.name);
+    }
+    if (options && options.docSchema) {
+      this.Resolver = createResolver(
+        capFirstLetter(options.docSchema.name),
+        this.collectionName,
+        options.docSchema,
+        this,
+        options.inputType
+      );
+    }
   }
 
   /**
@@ -141,6 +199,13 @@ export default class {
   }
 
   /**
+   * Get the name of the collection the model is attached to
+   */
+  getCollectionName() {
+    return this.collectionName;
+  }
+
+  /**
    * Get the Firestore reference to the collection
    */
   ref(): firestore.CollectionReference {
@@ -152,7 +217,7 @@ export default class {
    * @see https://fireorm.js.org/#/classes/basefirestorerepository
    */
   repo() {
-    return GetRepository(this.options.collection);
+    return GetRepository(this.options.docSchema);
   }
 
   /**

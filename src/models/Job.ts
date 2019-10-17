@@ -43,7 +43,7 @@ export class JobInput implements Partial<Job> {
 export class JobModel extends Model {
   constructor() {
     super({
-      collection: Job,
+      docSchema: Job,
       inputType: JobInput
     });
   }

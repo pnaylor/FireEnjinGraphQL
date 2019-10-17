@@ -39,7 +39,7 @@ export class UserInput implements Partial<User> {
 export class UserModel extends Model {
   constructor() {
     super({
-      collection: User,
+      docSchema: User,
       inputType: UserInput
     });
   }

@@ -29,49 +29,49 @@ input JobInput {
 
 type Mutation {
   addJob(
-    # Add a new document to the job collection.
+    # Add a new Job document to the Jobs collection.
     data: JobInput!
   ): Job!
   deleteJob(
-    # The ID of the document being deleted in the job collection
+    # The ID of the Job document being deleted in the Jobs collection
     id: String!
   ): Job!
   editJob(
-    # Update a document in the job collection.
+    # Update a Job document in the Jobs collection.
     data: JobInput!
 
-    # The ID of the document in the job collection
+    # The ID of the Job document in the Jobs collection
     id: String!
   ): Job!
   addUser(
-    # Add a new document to the user collection.
+    # Add a new User document to the Users collection.
     data: UserInput!
   ): User!
   deleteUser(
-    # The ID of the document being deleted in the user collection
+    # The ID of the User document being deleted in the Users collection
     id: String!
   ): User!
   editUser(
-    # Update a document in the user collection.
+    # Update a User document in the Users collection.
     data: UserInput!
 
-    # The ID of the document in the user collection
+    # The ID of the User document in the Users collection
     id: String!
   ): User!
   addUserToJob(data: AddUserToJobInput!): Job!
 }
 
 type Query {
-  # Get a specific job document from the collection.
+  # Get a specific Job document from the Jobs collection.
   job(id: String!): Job
 
-  # Get a list of job documents from the collection.
+  # Get a list of Job documents from the Jobs collection.
   jobs: [Job!]
 
-  # Get a specific user document from the collection.
+  # Get a specific User document from the Users collection.
   user(id: String!): User
 
-  # Get a list of user documents from the collection.
+  # Get a list of User documents from the Users collection.
   users: [User!]
 }
 
