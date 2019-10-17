@@ -40,4 +40,4 @@ import env from "./env";
       serverInfo.url
     }`
   );
-})();
+})().catch(error => console.log(error));

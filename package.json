@@ -1,5 +1,8 @@
 {
   "name": "@enjin/fireenjingraphql",
+  "engines": {
+    "node": "10"
+  },
   "version": "0.0.0-development",
   "scripts": {
     "build": "npm run clean && tsc",
@@ -7,7 +10,8 @@
     "codegen": "graphql-codegen --config codegen.yml",
     "deploy": "npm run build && gcloud app deploy",
     "env": "node tasks/env",
-    "release": "npm run build && npm run codegen",
+    "lint": "tslint --project tsconfig.json",
+    "release": "npm run lint && npm run build && npm run codegen",
     "semantic-release": "semantic-release",
     "seed": "npm run build && node tasks/runSeeds.js",
     "seed:clone": "npm run build && node tasks/cloneSeed.js",
@@ -21,6 +25,7 @@
   "dependencies": {
     "apollo-server": "^2.9.6",
     "firebase-admin": "^8.6.1",
+    "firebase-functions": "^3.3.0",
     "fireorm": "^0.9.0",
     "fs-extra": "^8.1.0",
     "graphql": "^14.5.8",
@@ -40,7 +45,6 @@
     "@graphql-codegen/typescript-stencil-apollo": "1.8.1",
     "@graphql-codegen/typescript-type-graphql": "^1.8.1",
     "@types/jest": "^24.0.19",
-    "firebase-functions": "^3.3.0",
     "globby": "^10.0.1",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",

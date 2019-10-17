@@ -7,7 +7,7 @@ import AddUserToJobInput from "../inputs/addUserToJob";
 import addUserToJobUnit from "../units/addUserToJob/addUserToJob";
 
 @Resolver()
-class AddUserToJobResolver {
+export class AddUserToJobResolver {
   @Mutation(() => Job)
   async addUserToJob(@Arg("data") data: AddUserToJobInput): Promise<Job> {
     return addUserToJobUnit(data);
