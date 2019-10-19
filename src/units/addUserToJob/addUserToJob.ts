@@ -10,9 +10,12 @@ export default async function addUserToJobUnit(
   data: AddUserToJobInput
 ): Promise<Job> {
   const Jobs = new JobModel();
-
-  return (await Jobs.update({
+  const Users = new UserModel();
+  const updatedJob = (await Jobs.update({
     ...(await Jobs.find(data.job)),
-    user: new UserModel().ref().doc(data.user)
+    user: Users.ref().doc(data.user)
   })) as any;
+  updatedJob.user = await Users.find(data.user);
+
+  return updatedJob;
 }

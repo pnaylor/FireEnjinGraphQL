@@ -5,3 +5,4 @@ env/live
 /environment.json
 .history
 .enjin
+firebase-debug.log

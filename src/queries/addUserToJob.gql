@@ -1,0 +1,10 @@
+mutation AddUserToJob($data: AddUserToJobInput!) {
+  addUserToJob(data: $data) {
+    id
+    customer
+    user {
+      id
+      name
+    }
+  }
+}
