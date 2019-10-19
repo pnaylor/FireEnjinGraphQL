@@ -6,9 +6,11 @@
   "version": "0.0.0-development",
   "scripts": {
     "build": "npm run clean && tsc",
+    "build:firebase": "npm run build && node tasks/buildFirebaseFunctions.js",
     "clean": "rimraf dist/",
     "codegen": "graphql-codegen --config codegen.yml",
-    "deploy": "npm run build && gcloud app deploy",
+    "deploy:graphql": "npm run build && gcloud app deploy",
+    "deploy:firebase": "firebase deploy",
     "env": "node tasks/env",
     "lint": "tslint --project tsconfig.json",
     "release": "npm run lint && npm run build && npm run codegen",
