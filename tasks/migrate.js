@@ -1,5 +1,5 @@
 const globby = require("globby");
-const fbAdmin = require("firebase-admin");
+const admin = require("firebase-admin");
 const fs = require("fs-extra");
 
 function connectDatabase() {
@@ -7,13 +7,13 @@ function connectDatabase() {
     fs.readFileSync(`${process.cwd()}/service-account.json`, "utf8")
   );
   const project = serviceAccountKey.project_id;
-  fbAdmin.initializeApp({
-    credential: fbAdmin.credential.cert(serviceAccountKey),
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKey),
     databaseURL: `https://${project}.firebaseio.com`,
     storageBucket: `${project}.appspot.com`
   });
 
-  return fbAdmin.firestore();
+  return admin.firestore();
 }
 
 (async () => {
@@ -27,8 +27,6 @@ function connectDatabase() {
       let currentMigration = require(`../${file}`).default(db, dryRun);
       const migrationName = pathArr[pathArr.length - 1].split(".")[0];
 
-      console.log(`Running migration ${migrationName}...`);
-
       currentMigration =
         typeof currentMigration.then === "function"
           ? await currentMigration
@@ -39,6 +37,8 @@ function connectDatabase() {
       if (migrationDoc.exists) {
         continue;
       }
+
+      console.log(`Running migration ${migrationName}...`);
 
       let result;
       try {
@@ -52,10 +52,15 @@ function connectDatabase() {
         continue;
       }
 
-      await docRef.set({
-        result,
-        createdAt: new Date()
-      });
+      try {
+        await docRef.set({
+          result,
+          createdAt: admin.firestore.Timestamp.fromDate(new Date())
+        });
+      } catch (error) {
+        console.log(`Error saving ${migrationName} migration results...`);
+        throw new Error(error);
+      }
 
       migrationCount = migrationCount + 1;
     }

@@ -35,6 +35,10 @@ PENDING...
 
 Deploy the project to Firebase (Google Cloud).
 
+## migrate
+
+Run migrations that haven't already ran from src/migrations folder.
+
 ## release
 
 Build a release of the backend, typings, and Stencil components.
