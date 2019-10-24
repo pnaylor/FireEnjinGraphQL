@@ -9,6 +9,9 @@ export default async function auth({ context }, roles) {
   }
 
   const decodedToken = await admin.auth().verifyIdToken(context.token);
+  // await admin.auth().setCustomUserClaims(decodedToken.uid, {
+  //   role: "admin"
+  // });
   const user = await admin.auth().getUser(decodedToken.uid);
 
   const canAccessData =
