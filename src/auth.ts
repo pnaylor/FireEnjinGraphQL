@@ -8,10 +8,15 @@ export default async function auth({ context }, roles) {
     return false;
   }
 
-  const UserImport = await import("./models/User");
-  const User = new UserImport.UserModel();
   const decodedToken = await admin.auth().verifyIdToken(context.token);
-  const authUser = await User.find(decodedToken.uid);
+  const user = await admin.auth().getUser(decodedToken.uid);
 
-  return !!authUser;
+  const canAccessData =
+    roles && roles.length > 0
+      ? user && user.customClaims && user.customClaims["role"]
+        ? roles.indexOf(user.customClaims["role"]) >= 0
+        : false
+      : true;
+
+  return canAccessData;
 }

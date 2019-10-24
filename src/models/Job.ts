@@ -1,5 +1,6 @@
 import { Collection } from "fireorm";
 import {
+  Authorized,
   Field,
   ID,
   ObjectType,
@@ -30,6 +31,7 @@ export class Job {
     description: "The primary phone number to contact for the job"
   })
   phone?: string;
+  @Authorized(["ert"])
   @Field(() => User)
   user: User;
 }
