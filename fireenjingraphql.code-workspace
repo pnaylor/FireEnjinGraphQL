@@ -15,6 +15,7 @@
       "titleBar.activeBackground": "#5613A8",
       "titleBar.activeForeground": "#FCFAFE"
     },
+    "prettier.ignorePath": ".prettierignore",
     "todo-tree.tree.expanded": true,
     "todo-tree.tree.flat": true
   }
