@@ -24,7 +24,7 @@ async function writeData(filename, data) {
 async function renderIndex(location, importStr, exportStr) {
   return new Promise(async (resolve, reject) => {
     fs.readFile(
-      "./templates/firebaseFunctionsIndex.js",
+      "./templates/firebaseFunctionsIndex.hbs",
       "utf8",
       async (err, data) => {
         try {

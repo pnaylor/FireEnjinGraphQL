@@ -122,7 +122,7 @@ async function checkForReferences(object) {
 
 async function renderSeed(location, seedContent) {
   return new Promise(async (resolve, reject) => {
-    fs.readFile("./templates/seed.ts", "utf8", async (err, data) => {
+    fs.readFile("./templates/seed.hbs", "utf8", async (err, data) => {
       if (err) {
         console.log(err);
         reject(err);

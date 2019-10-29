@@ -1,0 +1,9 @@
+import admin from "firebase-admin";
+
+import { {{pascalCase modelName}} } from "../../models/{{pascalCase modelName}}";
+
+export default function(
+  db: admin.firestore.Firestore
+): Partial<{{pascalCase modelName}}> {
+  return {{data}};
+}
