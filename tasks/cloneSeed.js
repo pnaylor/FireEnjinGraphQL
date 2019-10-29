@@ -181,7 +181,6 @@ async function createSeedWithDocumentData(documentData, id) {
   } else {
     const collectionData = await getCollection();
     for (const document of collectionData) {
-      console.log(document);
       await createSeedWithDocumentData(document.data(), document.id);
     }
   }
