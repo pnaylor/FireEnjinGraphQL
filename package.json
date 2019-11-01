@@ -6,7 +6,7 @@
   "enjin": {
     "stack": "@madnesslabs/fireenjin"
   },
-  "version": "1.22.9",
+  "version": "1.23.0",
   "scripts": {
     "build": "npm run clean && tsc && npm run codegen",
     "build:firebase": "npm run build && fireenjin triggers",
@@ -54,7 +54,6 @@
     "@madnesslabs/fireenjin": "^1.0.0",
     "@semantic-release/commit-analyzer": "^6.3.2",
     "@semantic-release/git": "^7.0.17",
-    "@semantic-release/npm": "^5.3.2",
     "@semantic-release/release-notes-generator": "^7.3.2",
     "@types/jest": "^24.0.19",
     "jest": "^24.9.0",
