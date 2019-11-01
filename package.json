@@ -53,7 +53,7 @@
     "@graphql-codegen/typescript-graphql-files-modules": "^1.8.2",
     "@graphql-codegen/typescript-graphql-request": "^1.8.2",
     "@graphql-codegen/typescript-operations": "^1.8.2",
-    "@madnesslabs/fireenjin": "^1.0.10",
+    "@madnesslabs/fireenjin": "^1.0.0",
     "@semantic-release/commit-analyzer": "^6.3.2",
     "@semantic-release/git": "^7.0.17",
     "@semantic-release/npm": "^5.3.2",
