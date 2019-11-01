@@ -27,10 +27,6 @@ Generate typings and StencilJS components from models and queries.
 
 Copy files from env folder and overwrite specific files per environment.
 
-## docs
-
-PENDING...
-
 ## deploy
 
 Deploy the project to Firebase (Google Cloud).
