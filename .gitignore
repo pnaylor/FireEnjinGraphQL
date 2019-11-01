@@ -1,5 +1,4 @@
 node_modules/
-dist/
 service-account.json
 env/live
 /environment.json
