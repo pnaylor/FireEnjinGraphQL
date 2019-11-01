@@ -14,6 +14,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Build
-        run: npm run build
+        run: npm run build:firebase
       - name: Deploy to Firebase
         run: npm run deploy:firebase -- --token "${{ secrets.FIREBASE_TOKEN }}"
