@@ -1,6 +1,9 @@
 {
   "name": "@madnesslabs/fireenjingraphql",
   "version": "1.24.0",
+  "engines": {
+    "node": "10"
+  },
   "scripts": {
     "build": "npm run clean && tsc && npm run codegen",
     "build:firebase": "npm run build && fireenjin triggers",
