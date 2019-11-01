@@ -1,12 +1,12 @@
 {
-  "name": "@enjin/fireenjingraphql",
+  "name": "@madnesslabs/fireenjingraphql",
   "engines": {
     "node": "10"
   },
   "enjin": {
     "stack": "@madnesslabs/fireenjin"
   },
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "scripts": {
     "build": "npm run clean && tsc && npm run codegen",
     "build:firebase": "npm run build && fireenjin triggers",
@@ -14,11 +14,10 @@
     "codegen": "graphql-codegen --config codegen.yml && tsc dist/sdk.ts",
     "deploy:graphql": "npm run build && gcloud app deploy",
     "deploy:firebase": "firebase deploy",
-    "env": "node tasks/env",
+    "env": "fireenjin env",
     "g": "fireenjin generate",
     "lint": "tslint --project tsconfig.json",
     "migrate": "npm run build && fireenjin migrate",
-    "plop": "plop",
     "release": "npm run lint && npm run build && npm run codegen",
     "semantic-release": "semantic-release",
     "seed": "npm run build && fireenjin seed",
@@ -34,7 +33,7 @@
     "apollo-server": "^2.9.6",
     "firebase-admin": "^8.6.1",
     "firebase-functions": "^3.3.0",
-    "fireorm": "^0.10.0",
+    "fireorm": "^0.11.0",
     "fs-extra": "^8.1.0",
     "globby": "^10.0.1",
     "graphql": "^14.5.8",
@@ -53,7 +52,7 @@
     "@graphql-codegen/typescript-graphql-files-modules": "^1.8.2",
     "@graphql-codegen/typescript-graphql-request": "^1.8.2",
     "@graphql-codegen/typescript-operations": "^1.8.2",
-    "@madnesslabs/fireenjin": "^1.0.8",
+    "@madnesslabs/fireenjin": "^1.0.10",
     "@types/jest": "^24.0.19",
     "jest": "^24.9.0",
     "plop": "^2.5.2",
