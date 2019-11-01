@@ -62,7 +62,7 @@
     "jest": "^24.9.0",
     "plop": "^2.5.2",
     "rimraf": "^3.0.0",
-    "semantic-release": "^15.13.24",
+    "semantic-release": "^15.13.28",
     "ts-jest": "^24.1.0",
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^5.20.0",
@@ -75,10 +75,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/madnesslabs/FireEnjinGraphQL.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "url": "git+https://github.com/MadnessLabs/FireEnjinGraphQL.git"
   },
   "jest": {
     "testEnvironment": "node",
