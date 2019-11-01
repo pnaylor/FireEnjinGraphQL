@@ -1,8 +1,5 @@
 {
   "name": "@madnesslabs/fireenjingraphql",
-  "engines": {
-    "node": "10"
-  },
   "version": "1.24.0",
   "scripts": {
     "build": "npm run clean && tsc && npm run codegen",
@@ -54,6 +51,7 @@
     "@semantic-release/npm": "^5.3.2",
     "@semantic-release/release-notes-generator": "^7.3.2",
     "@types/jest": "^24.0.19",
+    "firebase-tools": "^7.6.2",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
     "semantic-release": "^15.13.28",
@@ -71,5 +69,21 @@
     "type": "git",
     "url": "git+https://github.com/MadnessLabs/FireEnjinGraphQL.git"
   },
-  "private": false
+  "private": false,
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts?)$",
+    "testURL": "http://localhost",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
 }
