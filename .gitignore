@@ -5,3 +5,4 @@ env/live
 .history
 .enjin
 firebase-debug.log
+/dist
