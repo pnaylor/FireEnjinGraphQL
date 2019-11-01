@@ -3,7 +3,7 @@
   "engines": {
     "node": "10"
   },
-  "version": "1.24.0",
+  "version": "1.23.0",
   "scripts": {
     "build": "npm run clean && tsc && npm run codegen",
     "build:firebase": "npm run build && fireenjin triggers",
