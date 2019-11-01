@@ -5,8 +5,8 @@ on:
       - master
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy-firebase:
+    name: Deploy Firebase
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -17,3 +17,19 @@ jobs:
         run: npm run build:firebase
       - name: Deploy to Firebase
         run: npm run deploy:firebase -- --token "${{ secrets.FIREBASE_TOKEN }}"
+  deploy-graphql:
+    name: Deploy GraphQL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - uses: actions-hub/gcloud@master
+        env:
+          PROJECT_ID: ${{secrets.GCLOUD_PROJECT_ID}}
+          APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}}
+        with:
+          args: app deploy app.yaml

@@ -9,7 +9,7 @@
     "build:firebase": "npm run build && fireenjin triggers",
     "clean": "rimraf dist/",
     "codegen": "graphql-codegen --config codegen.yml && tsc dist/sdk.ts",
-    "deploy:graphql": "npm run build && gcloud app deploy",
+    "deploy:graphql": "gcloud app deploy",
     "deploy:firebase": "firebase deploy",
     "env": "fireenjin env",
     "g": "fireenjin generate",
