@@ -12,8 +12,6 @@ export class Migration {
   id: string;
   @Field(() => Date, { nullable: true })
   createdAt?: Date;
-  @Field({ nullable: true })
-  result: any;
 }
 
 export class MigrationModel extends Model {

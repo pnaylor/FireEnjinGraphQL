@@ -9,6 +9,9 @@ input AddUserToJobInput {
   job: String!
 }
 
+# The javascript `Date` as string. Type represents date and time as the ISO Date string.
+scalar DateTime
+
 # The information for a job ticket
 type Job {
   id: ID!
@@ -25,6 +28,12 @@ type Job {
 # Editable job data
 input JobInput {
   customer: String
+}
+
+# The information for a migration
+type Migration {
+  id: ID!
+  createdAt: DateTime
 }
 
 type Mutation {
@@ -62,6 +71,12 @@ type Mutation {
 }
 
 type Query {
+  # Get a specific Migration document from the Migrations collection.
+  migration(id: String!): Migration
+
+  # Get a list of Migration documents from the Migrations collection.
+  migrations: [Migration!]
+
   # Get a specific Job document from the Jobs collection.
   job(id: String!): Job
 
