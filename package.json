@@ -6,7 +6,7 @@
   "enjin": {
     "stack": "@madnesslabs/fireenjin"
   },
-  "version": "1.22.7",
+  "version": "1.22.8",
   "scripts": {
     "build": "npm run clean && tsc && npm run codegen",
     "build:firebase": "npm run build && fireenjin triggers",
